@@ -55,6 +55,26 @@ function Game() {
     setIsPlayerTurn(true);
   };
 
+  // Función para colocar barcos aleatorios en el tablero
+  const placeRandomShips = (board, numberOfShips) => {
+    let updatedBoard = JSON.parse(JSON.stringify(board)); // Clonar el tablero para evitar referencias mutables
+    let shipsPlaced = 0;
+  
+    while (shipsPlaced < numberOfShips) {
+      const randomRow = Math.floor(Math.random() * 10);
+      const randomCol = Math.floor(Math.random() * 10);
+  
+      // Verificar si la posición está libre
+      if (updatedBoard[randomRow][randomCol] !== 1) {
+        updatedBoard[randomRow][randomCol] = 1; // Colocar el barco
+        shipsPlaced++;
+      }
+    }
+    console.log(updatedBoard)
+    return updatedBoard;
+  };
+  
+
   useEffect(() => {
     if (!initialRender && !isPlayerTurn && !gameOver) {
       const computerTurnTimeout = setTimeout(() => {
@@ -78,27 +98,39 @@ function Game() {
   }, [playerBoard, computerBoard, initialRender]);
 
   const restartGame = () => {
+    // Reiniciar el tablero del jugador y las posiciones de los barcos
     setPlayerBoard(initialPlayerBoard);
+    setPlayerShipPositions([]);
+  
+    // Reiniciar el tablero de la computadora y colocar nuevos barcos aleatorios
     setComputerBoard(initialComputerBoard);
+    console.log("Computer Board reiniciado:", initialComputerBoard);
+  
+    // Reiniciar otras variables de estado
     setIsPlayerTurn(true);
     setGameOver(false);
     setGameStarted(false);
     setInitialRender(true);
-    setPlayerShipPositions([]);
   };
+  
 
   const startGame = () => {
     console.log("Longitud de posiciones de barcos:", playerShipPositions.length);
     console.log("Posiciones de barcos actualizadas:", playerShipPositions);
+    
     if (playerShipPositions.length === totalNumberOfShips) {
       console.log("Entro en la condición para jugar");
+  
+      // Colocar 5 barcos en posiciones aleatorias en el tablero de la computadora
+      const updatedComputerBoard = placeRandomShips(initialComputerBoard, totalNumberOfShips);
+  
+      setComputerBoard(updatedComputerBoard);
       setGameStarted(true);
       setInitialRender(false);
     } else {
       console.log("No se han colocado todos los barcos.");
     }
   };
-  
 
   return (
     <div className="game">
@@ -111,6 +143,7 @@ function Game() {
           playerShipPositions={playerShipPositions}
           setPlayerShipPositions={setPlayerShipPositions}
           setPlayerBoard={setPlayerBoard}
+          totalNumberOfShips={totalNumberOfShips}
         />
         <Board
           board={computerBoard}
