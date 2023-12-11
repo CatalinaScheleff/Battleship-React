@@ -84,6 +84,7 @@ function Game() {
     setGameOver(false);
     setGameStarted(false);
     setInitialRender(true);
+    setPlayerShipPositions([]);
   };
 
   const startGame = () => {
