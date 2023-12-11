@@ -1,8 +1,45 @@
-// src/components/Board.js
-import React from 'react';
-import Cell from './Cell';
+import React from "react";
+import Cell from "./Cell";
 
-function Board({ board, onCellClick, isPlayerBoard }) {
+function Board({
+  board,
+  onCellClick,
+  isPlayerBoard,
+  playerShipPositions,
+  setPlayerShipPositions,
+  setPlayerBoard,
+}) {
+  const handleCellClick = (rowIndex, colIndex) => {
+    if (isPlayerBoard) {
+      const newPosition = { row: rowIndex, col: colIndex };
+
+      const isShipOccupied =
+        playerShipPositions &&
+        playerShipPositions.some(
+          (position) => position.row === rowIndex && position.col === colIndex
+        );
+
+      if (!isShipOccupied) {
+        const updatedBoard = board.map((row, i) =>
+          row.map((cell, j) => (i === rowIndex && j === colIndex ? 1 : cell))
+        );
+
+        const updatedPlayerShipPositions = [...playerShipPositions, newPosition];
+
+        console.log("Posiciones de barcos actualizadas:", updatedPlayerShipPositions);
+
+        setPlayerBoard(updatedBoard);
+        setPlayerShipPositions(updatedPlayerShipPositions);
+      } else {
+        console.log("Esta posición ya está ocupada por otro barco.");
+      }
+    } else {
+      if (onCellClick) {
+        onCellClick(rowIndex, colIndex);
+      }
+    }
+  };
+
   return (
     <div className="board">
       {board.map((row, rowIndex) => (
@@ -11,8 +48,14 @@ function Board({ board, onCellClick, isPlayerBoard }) {
             <Cell
               key={`${rowIndex}-${colIndex}`}
               value={cell}
-              onClick={() => (onCellClick ? onCellClick(rowIndex, colIndex) : null)}
-              isPlayerBoard={isPlayerBoard}  
+              onClick={() => handleCellClick(rowIndex, colIndex)}
+              isPlayerBoard={isPlayerBoard}
+              isShip={
+                playerShipPositions &&
+                playerShipPositions.some(
+                  (position) => position.row === rowIndex && position.col === colIndex
+                )
+              }
             />
           ))}
         </div>
