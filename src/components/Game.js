@@ -32,6 +32,8 @@ function Game() {
   const [playerBoard, setPlayerBoard] = useState(initialPlayerBoard);
   const [computerBoard, setComputerBoard] = useState(initialComputerBoard);
   const [isPlayerTurn, setIsPlayerTurn] = useState(true);
+  const [gameOver, setGameOver] = useState(false);
+  const [isPlayerWinner, setIsPlayerWinner] = useState(false);
 
   const firePlayerTorpedo = (row, col) => {
     
@@ -79,15 +81,31 @@ function Game() {
   
 
   useEffect(() => {
-
-    if (!isPlayerTurn) {
+    if (!isPlayerTurn && !gameOver) {
       const computerTurnTimeout = setTimeout(() => {
         fireComputerTorpedo();
       }, 1000);
 
       return () => clearTimeout(computerTurnTimeout);
     }
-  }, [isPlayerTurn]);
+  }, [isPlayerTurn, gameOver]);
+
+  useEffect(() => {
+    const isPlayerWinner = computerBoard.every(row => row.every(cell => cell !== 1));
+    const isComputerWinner = playerBoard.every(row => row.every(cell => cell !== 1));
+
+    if (isPlayerWinner || isComputerWinner) {
+      setGameOver(true);
+      setIsPlayerWinner(isPlayerWinner); 
+    }
+  }, [playerBoard, computerBoard]);
+
+  const restartGame = () => {
+    setPlayerBoard(initialPlayerBoard);
+    setComputerBoard(initialComputerBoard);
+    setIsPlayerTurn(true);
+    setGameOver(false);
+  };
 
   return (
     <div className="game">
@@ -96,6 +114,12 @@ function Game() {
         <Board board={playerBoard} onCellClick={null} isPlayerBoard={true} />
         <Board board={computerBoard} onCellClick={isPlayerTurn ? firePlayerTorpedo : null} isPlayerBoard={false} />
       </div>
+      {gameOver && (
+        <div>
+          <p>{isPlayerWinner ? '¡Has ganado!' : '¡La computadora ha ganado!'}</p>
+          <button onClick={restartGame}>Reiniciar</button>
+        </div>
+      )}
     </div>
   );
 }
