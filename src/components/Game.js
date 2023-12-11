@@ -153,7 +153,7 @@ function Game() {
       </div>
       {!gameOver && !gameStarted && (
       <div>
-        <p>{isPlayerTurn ? "Coloca tus barcos" : "Turno de la computadora"}</p>
+         <p>Coloca tus barcos ({playerShipPositions.length}/{totalNumberOfShips})</p>
         <button onClick={startGame} disabled={!isPlayerTurn || playerShipPositions.length !== totalNumberOfShips}>
           Jugar
         </button>
