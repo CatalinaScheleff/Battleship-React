@@ -49,3 +49,21 @@ body {
 .cell.hit {
   background-color: #2ecc71;
 }
+
+/* Nuevos estilos para las celdas con números */
+.cell.number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #fff; /* Color del texto */
+  background-color: #34495e; /* Nuevo color de fondo */
+  font-size: 12px; /* Nuevo tamaño de fuente */
+}
+
+/* Ajustes para la celda de la esquina superior izquierda */
+.cell.corner {
+  border-top: none;
+  border-left: none;
+  background-color: #2c3e50; /* Nuevo color de fondo */
+}

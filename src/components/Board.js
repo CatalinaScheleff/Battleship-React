@@ -65,28 +65,46 @@ function Board({
       }
     };
 
-  return (
-    <div className="board">
-      {board.map((row, rowIndex) => (
-        <div key={rowIndex} className="row">
-          {row.map((cell, colIndex) => (
-            <Cell
-              key={`${rowIndex}-${colIndex}`}
-              value={cell}
-              onClick={() => handleCellClick(rowIndex, colIndex)}
-              isPlayerBoard={isPlayerBoard}
-              isShip={
-                playerShipPositions &&
-                playerShipPositions.some(
-                  (position) => position.row === rowIndex && position.col === colIndex
-                )
-              }
-            />
+    return (
+        <div className="board">
+          {/* Fila adicional para mostrar números de 1 a 10 */}
+          <div className="row">
+            {/* Celda vacía en la esquina superior izquierda */}
+            <div className="cell corner"></div>
+            {Array.from({ length: 10 }).map((_, colIndex) => (
+              <div key={colIndex} className="cell number">
+                {colIndex + 1}
+              </div>
+            ))}
+          </div>
+    
+          {/* Resto del tablero */}
+          {board.map((row, rowIndex) => (
+            <div key={rowIndex} className="row">
+              {/* Celda con el número de la fila */}
+              <div className="cell number">
+                {rowIndex + 1}
+              </div>
+              {row.map((cell, colIndex) => (
+                <Cell
+                  key={`${rowIndex}-${colIndex}`}
+                  value={cell}
+                  onClick={() => handleCellClick(rowIndex, colIndex)}
+                  isPlayerBoard={isPlayerBoard}
+                  isShip={
+                    playerShipPositions &&
+                    playerShipPositions.some(
+                      (position) => position.row === rowIndex && position.col === colIndex
+                    )
+                  }
+    
+                />
+              ))}
+            </div>
           ))}
         </div>
-      ))}
-    </div>
-  );
-}
-
-export default Board;
+      );
+    }
+    
+    export default Board;
+    
